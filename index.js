@@ -69,11 +69,11 @@ incrementStats = function(stats, increment) {
 
     if(increment.isWide) {
       stats.runsFromWides += increment.runs;
-      stats.noBallsBowled += 1;
+      stats.widesBowled += 1;
     }
     else if(increment.isNoBall) {
       stats.runsFromNoBalls += increment.runs;
-      stats.widesBowled += 1;
+      stats.noBallsBowled += 1;
     }
     else if(increment.event.eventType != 'timedOut')
       stats.legalBallsBowled += 1;
