@@ -11,8 +11,7 @@ exports.delivery = function(e) {
     return increment;
 };
 
-// TODO: CLariy with Ryan naming of event
-exports.noballs = function(e) {
+exports.noBall = function(e) {
     debug('Processing noBall: %s', JSON.stringify(e));
     var increment = {};
     e.runs ? increment.runs = parseInt(e.runs) + 1 : increment.runs = 1;
@@ -22,7 +21,7 @@ exports.noballs = function(e) {
     return increment;
 };
 
-exports.wides = function(e) {
+exports.wide = function(e) {
     debug('Processing wide: %s', JSON.stringify(e));
     var increment = {};
     e.runs ? increment.runs = parseInt(e.runs) + 1 : increment.runs = 1;
@@ -32,7 +31,7 @@ exports.wides = function(e) {
     return increment;
 };
 
-exports.byes = function(e) {
+exports.bye = function(e) {
     debug('Processing bye: %s', JSON.stringify(e));
     var increment = {};
     increment.runs = 0;
@@ -40,8 +39,7 @@ exports.byes = function(e) {
     return increment;
 };
 
-// TODO: CLariy with Ryan naming of event
-exports.legbyes = function(e) {
+exports.legBye = function(e) {
     debug('Processing legBye: %s', JSON.stringify(e));
     var increment = {};
     e.runs ? increment.runs = parseInt(e.runs) : increment.runs = 0;
