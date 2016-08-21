@@ -20,7 +20,7 @@
     },
     "repository": {
       "type": "git",
-      "url": "git://github.com/bradleyscott/cricd-bowler-match-processor.git"
+      "url": "git://github.com/cricd/bowler-match-processor.git"
     },
     "author": "Bradley Scott"
 }
