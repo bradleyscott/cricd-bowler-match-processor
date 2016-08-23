@@ -11,21 +11,22 @@ app.get('/', function(req, res) {
     var match = req.query.match;
     var bowler = req.query.bowler;
 
-    if (!match || !bowler) {
+    if(!match || !bowler) {
         var error = 'matchId and bowlerId must be included in request query params';
         debug(error);
         return res.status(400).send(error);
     }
 
     var events = eventStore.getEvents(bowler, match, function(error, events) {
-        if (error) {
+        if(error) {
             debug(error);
             return res.status(500).send(error);
         }
 
         if(events.length == 0) {
-          debug('No events for this bowler in this match');
-          return res.send();
+            var message = 'No events for this bowler in this match';
+            debug(message);
+            return res.status(404).send(message);
         }
 
         var stats = {
@@ -48,7 +49,7 @@ app.get('/', function(req, res) {
             try {
                 var increment = eventProcessors[e.eventType](e);
                 incrementStats(stats, increment);
-            } catch (error) {
+            } catch(error) {
                 var message = 'Error trying to process events. ' + error;
                 debug(message);
                 return res.status(500).send(message);
@@ -68,15 +69,15 @@ incrementStats = function(stats, increment) {
     if(increment.runs) stats.runs += increment.runs;
 
     if(increment.isWide) {
-      stats.runsFromWides += increment.runs;
-      stats.widesBowled += 1;
+        stats.runsFromWides += increment.runs;
+        stats.widesBowled += 1;
     }
     else if(increment.isNoBall) {
-      stats.runsFromNoBalls += increment.runs;
-      stats.noBallsBowled += 1;
+        stats.runsFromNoBalls += increment.runs;
+        stats.noBallsBowled += 1;
     }
     else if(increment.event.eventType != 'timedOut')
-      stats.legalBallsBowled += 1;
+        stats.legalBallsBowled += 1;
 
     stats.economyRate = (stats.runs / stats.legalBallsBowled) * 6;
 
@@ -85,10 +86,9 @@ incrementStats = function(stats, increment) {
     if(stats.wickets.length > 0) stats.strikeRate = stats.runs / stats.wickets.length;
 
     // Methods of scoring
-    if (!increment.isWide && !increment.isNoBall && increment.runs)
-    {
-      if(stats.scoring[increment.runs]) stats.scoring[increment.runs]++;
-      else stats.scoring[increment.runs] = 1;
+    if(!increment.isWide && !increment.isNoBall && increment.runs) {
+        if(stats.scoring[increment.runs]) stats.scoring[increment.runs]++;
+        else stats.scoring[increment.runs] = 1;
     }
 
     stats.events.push(increment.event);
