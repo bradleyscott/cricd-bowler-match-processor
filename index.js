@@ -48,7 +48,7 @@ app.get('/', function(req, res) {
 
             try {
                 var increment = eventProcessors[e.eventType](e);
-                incrementStats(stats, increment);
+                eventProcessors.incrementStats(stats, increment);
             } catch(error) {
                 var message = 'Error trying to process events. ' + error;
                 debug(message);
@@ -62,34 +62,3 @@ app.get('/', function(req, res) {
 
 app.listen(3001);
 console.log('bowler-match-processor listening on port 3001...');
-
-incrementStats = function(stats, increment) {
-    debug('Incrementing stats using: %s', JSON.stringify(increment));
-
-    if(increment.runs) stats.runs += increment.runs;
-
-    if(increment.isWide) {
-        stats.runsFromWides += increment.runs;
-        stats.widesBowled += 1;
-    }
-    else if(increment.isNoBall) {
-        stats.runsFromNoBalls += increment.runs;
-        stats.noBallsBowled += 1;
-    }
-    else if(increment.event.eventType != 'timedOut')
-        stats.legalBallsBowled += 1;
-
-    stats.economyRate = (stats.runs / stats.legalBallsBowled) * 6;
-
-    // Wickets and striek rate
-    if(increment.wicket) stats.wickets.push(increment.wicket);
-    if(stats.wickets.length > 0) stats.strikeRate = stats.runs / stats.wickets.length;
-
-    // Methods of scoring
-    if(!increment.isWide && !increment.isNoBall && increment.runs) {
-        if(stats.scoring[increment.runs]) stats.scoring[increment.runs]++;
-        else stats.scoring[increment.runs] = 1;
-    }
-
-    stats.events.push(increment.event);
-};
