@@ -10,9 +10,10 @@ app.get('/', function(req, res) {
 
     var match = req.query.match;
     var bowler = req.query.bowler;
+    var innings = req.query.innings;
 
-    if(!match || !bowler) {
-        var error = 'matchId and bowlerId must be included in request query params';
+    if(!match) {
+        var error = 'match must be included in request query params';
         debug(error);
         return res.status(400).send(error);
     }
@@ -29,19 +30,7 @@ app.get('/', function(req, res) {
             return res.status(404).send(message);
         }
 
-        var stats = {
-            runs: 0,
-            legalBallsBowled: 0,
-            widesBowled: 0,
-            runsFromWides: 0,
-            noBallsBowled: 0,
-            runsFromNoBalls: 0,
-            economyRate: 0,
-            wickets: [],
-            strikeRate: 0,
-            scoring: {},
-            events: []
-        };
+        var stats = {};
 
         _(events).each(function(e) {
             debug('Invoking processor for: %s', e.eventType);
@@ -55,6 +44,9 @@ app.get('/', function(req, res) {
                 return res.status(500).send(message);
             }
         });
+
+        if(innings && bowler) stats = stats[innings][bowler];
+        else if(innings) stats = stats[innings];
 
         return res.send(stats);
     });

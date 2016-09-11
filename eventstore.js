@@ -27,6 +27,7 @@ filterBowlerEvents = function(events, bowlerId) {
     debug('Filtering events for bowlerId: %s', bowlerId);
     var filtered = _(events).filter(function(e) {
         var isRelevant = false;
+        if(e.bowler.id && !bowlerId) isRelevant = true;
         if (e.bowler.id && e.bowler.id == bowlerId) isRelevant = true;
         return isRelevant;
     });
