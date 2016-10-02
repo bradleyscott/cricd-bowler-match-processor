@@ -17,8 +17,7 @@ var getBowlersIndex = function(stats, bowler) {
         economyRate: 0,
         wickets: [],
         strikeRate: 0,
-        scoring: {},
-        events: []
+        scoring: {}    
     });
     return stats.length - 1;
 };
@@ -54,8 +53,6 @@ exports.incrementStats = function(stats, increment) {
         if(stats[index].scoring[increment.runs]) stats[index].scoring[increment.runs]++;
         else stats[index].scoring[increment.runs] = 1;
     }
-
-    stats[index].events.push(increment.event);
 };
 
 exports.delivery = function(e) {
