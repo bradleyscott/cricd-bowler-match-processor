@@ -1,5 +1,5 @@
 {
-  "name": "cricd-bowler-match-processor",
+  "name": "cricd-bowling-processor",
   "private": true,
   "version": "0.0.0",
   "description": "An HTTP API that can tell you stats about a bowler",
@@ -18,7 +18,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/cricd/bowler-match-processor.git"
+    "url": "git://github.com/cricd/bowling-processor.git"
   },
   "author": "Bradley Scott",
   "devDependencies": {

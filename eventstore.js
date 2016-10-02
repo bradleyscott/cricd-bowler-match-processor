@@ -1,4 +1,4 @@
-var debug = require('debug')('bowler-match-processor-eventstore');
+var debug = require('debug')('bowling-processor:eventstore');
 var client = require('ges-client');
 var _ = require('underscore');
 var exports = module.exports = {};
@@ -9,34 +9,7 @@ var port = process.env.EVENTSTORE_PORT ? process.env.EVENTSTORE_PORT : 1113;
 var user = process.env.EVENTSTORE_USER ? process.env.EVENTSTORE_USER : 'admin';
 var password = process.env.EVENTSTORE_PASSWORD ? process.env.EVENTSTORE_PASSWORD : 'changeit';
 
-getEvents = function(bowlerId, matchId, callback) {
-    getMatchEvents(matchId, function(error, events) {
-        if (error) callback(error);
-        try {
-            events = filterBowlerEvents(events, bowlerId);
-        } catch (err) {
-            callback(err);
-        }
-
-        callback(null, events);
-    });
-};
-exports.getEvents = getEvents;
-
-filterBowlerEvents = function(events, bowlerId) {
-    debug('Filtering events for bowlerId: %s', bowlerId);
-    var filtered = _(events).filter(function(e) {
-        var isRelevant = false;
-        if(e.bowler.id && !bowlerId) isRelevant = true;
-        if (e.bowler.id && e.bowler.id == bowlerId) isRelevant = true;
-        return isRelevant;
-    });
-
-    debug('%s events found', filtered.length);
-    return filtered;
-};
-
-getMatchEvents = function(matchId, callback) {
+exports.getEvents = function(matchId, callback) {
     if (!matchId) {
         var error = 'matchId is required to get EventStore events';
         debug(error);

@@ -1,9 +1,13 @@
-var debug = require('debug')('bowler-match-processor-eventProcessors');
+var debug = require('debug')('bowling-processor:eventProcessors');
 var _ = require('underscore');
 var exports = module.exports = {};
 
-startSpell = function(){
-    return {
+var getBowlersIndex = function(stats, bowler) {
+    for(var i = 0; i < stats.length; i++)
+        if(stats[i].bowler.id == bowler.id) return i;
+
+    stats.push({
+        bowler: bowler,
         runs: 0,
         legalBallsBowled: 0,
         widesBowled: 0,
@@ -15,47 +19,43 @@ startSpell = function(){
         strikeRate: 0,
         scoring: {},
         events: []
-    };
+    });
+    return stats.length - 1;
 };
 
 exports.incrementStats = function(stats, increment) {
     debug('Incrementing stats using: %s', JSON.stringify(increment));
 
-    var innings = increment.event.ball.innings;
-    var bowler; 
-    if(increment.event.bowler) bowler = increment.event.bowler.id;
+    var bowler = increment.event.bowler;
     if(!bowler) return;
+    var index = getBowlersIndex(stats, bowler);
 
-    if(!stats[innings]) stats[innings] = {};
-    if(!stats[innings][bowler]) stats[innings][bowler] = startSpell();
-
-    
-    if(increment.runs) stats[innings][bowler].runs += increment.runs;
+    if(increment.runs) stats[index].runs += increment.runs;
 
     if(increment.event.eventType == 'wide') {
-        stats[innings][bowler].runsFromWides += increment.runs;
-        stats[innings][bowler].widesBowled += 1;
+        stats[index].runsFromWides += increment.runs;
+        stats[index].widesBowled += 1;
     }
     else if(increment.event.eventType == 'noBall') {
-        stats[innings][bowler].runsFromNoBalls += increment.runs;
-        stats[innings][bowler].noBallsBowled += 1;
+        stats[index].runsFromNoBalls += increment.runs;
+        stats[index].noBallsBowled += 1;
     }
     else if(increment.event.eventType != 'timedOut')
-        stats[innings][bowler].legalBallsBowled += 1;
+        stats[index].legalBallsBowled += 1;
 
-    stats[innings][bowler].economyRate = (stats[innings][bowler].runs / stats[innings][bowler].legalBallsBowled) * 6;
+    stats[index].economyRate = (stats[index].runs / stats[index].legalBallsBowled) * 6;
 
     // Wickets and strike rate
-    if(increment.wicket) stats[innings][bowler].wickets.push(increment.wicket);
-    if(stats[innings][bowler].wickets.length > 0) stats[innings][bowler].strikeRate = stats[innings][bowler].runs / stats[innings][bowler].wickets.length;
+    if(increment.wicket) stats[index].wickets.push(increment.wicket);
+    if(stats[index].wickets.length > 0) stats[index].strikeRate = stats[index].runs / stats[index].wickets.length;
 
     // Methods of scoring
     if(!increment.isWide && !increment.isNoBall && increment.runs) {
-        if(stats[innings][bowler].scoring[increment.runs]) stats[innings][bowler].scoring[increment.runs]++;
-        else stats[innings][bowler].scoring[increment.runs] = 1;
+        if(stats[index].scoring[increment.runs]) stats[index].scoring[increment.runs]++;
+        else stats[index].scoring[increment.runs] = 1;
     }
 
-    stats[innings][bowler].events.push(increment.event);
+    stats[index].events.push(increment.event);
 };
 
 exports.delivery = function(e) {
