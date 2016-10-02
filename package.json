@@ -2,7 +2,7 @@
   "name": "cricd-bowling-processor",
   "private": true,
   "version": "0.0.0",
-  "description": "An HTTP API that can tell you stats about a bowler",
+  "description": "An HTTP API that can tell you the bowling stats of an innings",
   "main": "index.js",
   "scripts": {
     "debug": "DEBUG=* node-debug index.js",
