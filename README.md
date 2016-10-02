@@ -16,6 +16,6 @@ If your EventStore instance is running in a Docker container as well then networ
 Alternatively, you can clone the [code repository for this service](https://github.com/cricd/bowling-processor) and use Docker-Compose to spin up a environment containing both EventStore and this service which removes the need to perform these steps
 
 ## Accessing the service
-This service exposes a single endpoint at port 3001 by default which responds to GET requests. The service takes up to 3 parameters: match (Id of the match), bowler (Id of the bowler you are interested in), innings (the innings number)
+This service exposes a single endpoint at port 3001 by default which responds to GET requests. The service takes 2 parameters: match (Id of the match), innings (the innings number)
 
-For example: `http://localhost:3000?match=10&innings=1&bowler=2`
+For example: `http://localhost:3000?match=10&innings=1`
