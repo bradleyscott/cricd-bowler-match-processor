@@ -49,7 +49,7 @@ exports.incrementStats = function(stats, increment) {
     if(stats[index].wickets.length > 0) stats[index].strikeRate = stats[index].runs / stats[index].wickets.length;
 
     // Methods of scoring
-    if(!increment.isWide && !increment.isNoBall && increment.runs) {
+    if(!increment.isWide && !increment.isNoBall && (increment.runs || increment.runs == 0)) {
         if(stats[index].scoring[increment.runs]) stats[index].scoring[increment.runs]++;
         else stats[index].scoring[increment.runs] = 1;
     }
